@@ -1,0 +1,111 @@
+*, body{
+    box-sizing: border-box;
+    font-size: 16px;
+}
+/* toggle between login and signup*/
+nav > .nav.nav-tabs{
+
+    border: none;
+    color:#fff;
+    background:#272e38;
+    border-radius:0;
+
+}
+nav > div a.nav-item.nav-link,
+nav > div a.nav-item.nav-link.active
+{
+    border: none;
+    padding: 18px 25px;
+    color:#fff;
+    background:#272e38;
+    border-radius:0;
+}
+
+nav > div a.nav-item.nav-link.active:after
+{
+    content: "";
+    position: relative;
+    bottom: -60px;
+    left: -10%;
+    border: 15px solid transparent;
+    border-top-color: #e74c3c ;
+}
+.tab-content{
+    background: #fdfdfd;
+    line-height: 25px;
+    border: 1px solid #ddd;
+    border-top:5px solid #e74c3c;
+    border-bottom:5px solid #e74c3c;
+    padding:30px 25px;
+}
+
+nav > div a.nav-item.nav-link:hover,
+nav > div a.nav-item.nav-link:focus
+{
+    border: none;
+    background: #e74c3c;
+    color:#fff;
+    border-radius:0;
+    transition:background 0.20s linear;
+}
+
+.b-shadow{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+/* sign in FORM */
+#log-form, reg-form{
+    width:412px;
+    margin:10vh auto;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+#log-form form, #reg-form form {
+    width: 100%;
+    max-width: 410px;
+    padding: 15px;
+    margin: auto;
+}
+#log-form .form-control, #reg-form .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    margin-bottom: 1.5rem;
+}
+#log-form a, #reg-form a{
+    display: block;
+    padding-top:10px;
+    color:lightseagreen;
+}
+#log-form .lines, #reg-form .lines{
+    width:200px;
+    border:1px solid red;
+}
+#log-form .form-reset{ display: none; }
+
+/* Mobile */
+@media screen and (max-width:579px){
+    #log-form{
+        width:300px;
+    }
+
+    #log-form  .social-login{
+        width:200px;
+        margin:0 auto;
+        margin-bottom: 10px;
+    }
+    #log-form  .social-btn{
+        font-size: 1.3rem;
+        font-weight: 100;
+        color:white;
+        width:200px;
+        height: 56px;
+
+    }
+    #log-form .social-btn:nth-child(1){
+        margin-bottom: 5px;
+    }
+    #log-form .social-btn span{
+        display: none;
+    }
+
+}

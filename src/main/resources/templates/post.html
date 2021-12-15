@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="HandheldFriendly" content="true">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/post.css">
+    <title>Chatter | Start Conversation</title>
+</head>
+<body>
+<div class="container">
+    <div class="stepwizard">
+        <div class="stepwizard-row setup-panel">
+            <div class="stepwizard-step col-xs-3">
+                <a href="#step-1" type="button" class="btn btn-success btn-circle">
+                    <i class="glyphicon glyphicon-picture"></i>
+                </a>
+                <p class="mr-5"><small>Image</small></p>
+            </div>
+            <div class="stepwizard-step col-xs-3">
+                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </a>
+                <p><small>Caption</small></p>
+            </div>
+            <div class="stepwizard-step col-xs-3">
+                <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">
+                    <i class="glyphicon glyphicon-folder-open"></i>
+                </a>
+                <p><small>Product Details</small></p>
+            </div>
+            <div class="stepwizard-step col-xs-3">
+                <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">
+                    <i class="glyphicon glyphicon-ok"></i>
+                </a>
+                <p><small>Success</small></p>
+            </div>
+        </div>
+    </div>
+
+    <form role="form" method="post" th:action="@{/new-post}" th:object="${createPost}">
+        <div class="panel panel-primary setup-content" id="step-1">
+            <div class="panel-heading">
+                <h3 class="panel-title">Step I</h3>
+            </div>
+            <div class="panel-body">
+                <p>Upload that gossip worthy photo</p>
+                <input th:field="*{img}" type="file" accept=".png, .jpg, .jpeg">
+                <div>
+                    <input  name="*{id}" value="${postId}" type="hidden" />
+<!--                    <input th:field="*{id}" th:value="${editPost?.getId()}" type="hidden"/>-->
+                    <input th:field="*{isPersonal}" type="radio" id="privatePost" name="contact" value=true>
+                    <label for="privatePost">Private</label>
+
+                    <input th:field="*{isPersonal}" type="radio" id="publicPost" name="contact" value=false checked>
+                    <label for="publicPost">Public</label>
+                </div>
+                <button class="btn btn-primary nextBtn pull-right" type="button">Next</button>
+            </div>
+        </div>
+
+        <div class="panel panel-primary setup-content" id="step-2">
+            <div class="panel-heading">
+                <h3 class="panel-title">Step II</h3>
+            </div>
+            <div class="panel-body">
+                <p>Spice it up with pepper them caption</p>
+                <input name="postId" th:value="${ePostId}" type="hidden"/>
+                <textarea th:field="*{body}" th:text="${editPost.getBody()}" type="text"></textarea>
+                <ul class="list-inline pull-right">
+                    <li><button class="btn btn-primary nextBtn pull-right" type="button">Save and continue</button></li>
+<!--                    <li><button type="button" class="btn btn-default prev-step">Previous</button></li>-->
+<!--                    <li><button type="button" class="btn btn-primary next-step">Save and continue</button></li>-->
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="panel panel-primary setup-content" id="step-3">
+            <div class="panel-heading">
+                <h3 class="panel-title">Step III</h3>
+            </div>
+            <div class="panel-body">
+                <p>Add more details about your product</p>
+                <button class="btn btn-primary nextBtn pull-right" type="button">Next</button>
+            </div>
+        </div>
+
+        <div class="panel panel-primary setup-content" id="step-4">
+            <div class="panel-heading">
+                <h3 class="panel-title">Step IV</h3>
+            </div>
+            <div class="panel-body">
+                <p>You have successfully completed all steps.</p>
+                <button class="btn btn-success pull-right" type="submit">Post!</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        var navListItems = $('div.setup-panel div a'),
+            allWells = $('.setup-content'),
+            allNextBtn = $('.nextBtn');
+
+        allWells.hide();
+
+        navListItems.click(function (e) {
+            e.preventDefault();
+            var $target = $($(this).attr('href')),
+                $item = $(this);
+
+            if (!$item.hasClass('disabled')) {
+                navListItems.removeClass('btn-success').addClass('btn-default');
+                $item.addClass('btn-success');
+                allWells.hide();
+                $target.show();
+                $target.find('input:eq(0)').focus();
+            }
+        });
+
+        allNextBtn.click(function () {
+            var curStep = $(this).closest(".setup-content"),
+                curStepBtn = curStep.attr("id"),
+                nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+                curInputs = curStep.find("input[type='text'],input[type='url']"),
+                isValid = true;
+
+            $(".form-group").removeClass("has-error");
+            for (var i = 0; i < curInputs.length; i++) {
+                if (!curInputs[i].validity.valid) {
+                    isValid = false;
+                    $(curInputs[i]).closest(".form-group").addClass("has-error");
+                }
+            }
+
+            if (isValid) nextStepWizard.removeAttr('disabled').trigger('click');
+        });
+
+        $('div.setup-panel div a.btn-success').trigger('click');
+    });
+</script>
+</body>
+</html>

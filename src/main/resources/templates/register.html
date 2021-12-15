@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="HandheldFriendly" content="true">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link rel="stylesheet" href="/register.css">
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-12 col-sm-12 w-50 b-shadow">
+      <nav>
+        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+          <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#login-form" role="tab" aria-controls="nav-profile" aria-selected="false">
+            Log In
+          </a>
+          <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#signup-form" role="tab" aria-controls="nav-home" aria-selected="true">
+            Sign Up
+          </a>
+        </div>
+      </nav>
+
+      <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="login-form" role="tabpanel" aria-labelledby="nav-home-tab">
+          <div id="log-form">
+            <form class="form-signin" method="post" th:action="@{/loginUser}" th:object="${loginUser}">
+              <input th:field="*{email}" type="email" id="logEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+              <input th:field="*{password}" type="password" id="logPassword" class="form-control" placeholder="Password" required="">
+
+              <button class="btn btn-dark btn-block" type="submit">
+                <i class="fas fa-sign-in-alt"></i>
+                Log in
+              </button>
+              <a href="#" id="forgot_pswd">Forgot password?</a>
+              <hr>
+            </form>
+            <form action="/reset/password/" class="form-reset">
+              <input type="email" id="resetEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+              <button class="btn btn-dark btn-block" type="submit">Reset Password</button>
+              <a href="#" id="cancel_reset"><i class="fas fa-angle-left"></i> Back</a>
+            </form>
+            <br>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="signup-form" role="tabpanel" aria-labelledby="nav-profile-tab">
+          <div id="reg-form" >
+            <form class="form-signin" method="post" th:action="@{/createUser}" th:object="${registerUser}">
+              <input th:field="*{firstName}" type="text" id="fname" class="form-control" placeholder="First Name" required="" autofocus="">
+              <input th:field="*{lastName}" type="text" id="lname" class="form-control" placeholder="Last Name" required="" autofocus="">
+              <input th:field="*{email}" type="email" id="regEmail" class="form-control" placeholder="Email address" required autofocus="">
+              <input th:field="*{mobile}" type="text" id="regMobile" class="form-control" placeholder="Phone Number" required autofocus="">
+              <input th:field="*{password}" type="password" minlength="5" id="regPassword" class="form-control" placeholder="Password" required>
+
+              <button class="btn btn-dark btn-block" type="submit">
+                <i class="fas fa-sign-in-alt"></i> Sign Up
+              </button>
+              <hr>
+            </form>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!--/ container -->
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

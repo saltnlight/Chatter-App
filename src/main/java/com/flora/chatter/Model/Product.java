@@ -16,26 +16,19 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product extends Post{
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
+//    @NotBlank(message = "Description field is required")
+    private String description;
 
-    @NotBlank(message = "Description field is required")
-    private String title;
-
-    @NotBlank(message = "Price field is required")
+//    @NotBlank(message = "Price field is required")
     private Double price;
 
-    public Product(Long id, @NotBlank String body, @NotBlank String img, Boolean isPersonal, Timestamp createdAt, Integer numOfLikes, Integer numOfComments, AppUser user, String title, Double price) {
-        super(id, body, img, isPersonal, createdAt, numOfLikes, numOfComments, user);
-        this.title = title;
+    public Product(Long id, @NotBlank String body, @NotBlank String img, Boolean isPersonal, Boolean isProduct, Timestamp createdAt, Integer numOfLikes, Integer numOfComments, AppUser user, String description, Double price) {
+        this.description = description;
         this.price = price;
     }
 
-
-    //    @NotEmpty
-//    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AppUser.class)
-//    @JoinColumn(name = "user_fk")
+//    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Order.class)
+//    @JoinColumn(name = "order_fk")
 //    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private AppUser user;
+//    private Order order;
 }

@@ -14,6 +14,8 @@ public interface PostService {
 
     List<Post> fetchAllUserPrivatePost(Long id);
 
+    List<Post> fetchAllUserPost(Long id);
+
     Post updatePost(PostReq postReq, AppUser user);
 
     boolean deletePost(Long postId);

@@ -51,8 +51,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> fetchAllComment() {
-        return commentRepository.findAll();
+    public List<Comment> fetchAllCommentPerPost(Long id) {
+        return commentRepository.findCommentsByPostIdOrderByCreatedAtDesc(id);
     }
 
     @Override

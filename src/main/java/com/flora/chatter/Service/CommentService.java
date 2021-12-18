@@ -12,7 +12,7 @@ public interface CommentService {
 
     boolean deleteComment(Long id);
 
-    List<Comment> fetchAllComment();
+    List<Comment> fetchAllCommentPerPost(Long id);
 
     @Transactional
     Comment updateComment(CommentReq commentReq, AppUser user);

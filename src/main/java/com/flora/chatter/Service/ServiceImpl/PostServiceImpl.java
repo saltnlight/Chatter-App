@@ -4,11 +4,14 @@ import com.flora.chatter.Exception.PostException;
 import com.flora.chatter.Exception.UserException;
 import com.flora.chatter.Model.AppUser;
 import com.flora.chatter.Model.Post;
+import com.flora.chatter.Model.Product;
 import com.flora.chatter.Payload.Request.PostReq;
 import com.flora.chatter.Repository.CommentRepository;
 import com.flora.chatter.Repository.PostLikesRepository;
 import com.flora.chatter.Repository.PostRepository;
+import com.flora.chatter.Repository.ProductRepository;
 import com.flora.chatter.Service.PostService;
+import com.flora.chatter.Service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +24,14 @@ import java.util.Optional;
 @Slf4j
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final ProductRepository productRepository;
     private final PostLikesRepository postLikesRepository;
     private final CommentRepository commentRepository;
 
     @Autowired
-    public PostServiceImpl(PostRepository pr, PostLikesRepository postLikesRepository, CommentRepository commentRepository) {
+    public PostServiceImpl(PostRepository pr, ProductRepository productRepository, PostLikesRepository postLikesRepository, CommentRepository commentRepository) {
         this.postRepository = pr;
+        this.productRepository = productRepository;
         this.postLikesRepository = postLikesRepository;
         this.commentRepository = commentRepository;
     }
@@ -35,12 +40,12 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public Post createPost(PostReq postReq, AppUser user) {
-        System.out.println(user);
         Post post = new Post();
         post.setUser(user);
         post.setBody(postReq.getBody());
         post.setImg(postReq.getImg());
         post.setIsPersonal(postReq.getIsPersonal());
+        post.setIsProduct(postReq.getIsProduct());
         Post savedPost;
         try{
             savedPost = postRepository.save(post);
@@ -54,6 +59,7 @@ public class PostServiceImpl implements PostService {
     public List<Post> fetchAllPublicPost() {
         List<Post> posts = postRepository.findAllByIsPersonalFalseOrderByCreatedAtDesc();
         for (Post post:posts) {
+            post.setImg("/image/"+post.getImg());
             post.setNumOfLikes(postLikesRepository.findAllByPostId(post.getId()).size());
             post.setNumOfComments(commentRepository.findCommentsByPostId(post.getId()).size());
         }
@@ -62,8 +68,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> fetchAllUserPrivatePost(Long id) {
-        List<Post> privatePosts = postRepository.findAllByIdAndIsPersonalTrueOrderByCreatedAtDesc(id);
-        return privatePosts;
+        return postRepository.findPrivateByUserId(id);
+    }
+
+    @Override
+    public List<Post> fetchAllUserPost(Long id) {
+        return postRepository.findAllByUserIdOrderByCreatedAtDesc(id);
     }
 
     @Override
@@ -77,6 +87,7 @@ public class PostServiceImpl implements PostService {
                 updatedPost.setBody(postReq.getBody());
                 updatedPost.setImg(postReq.getImg());
                 updatedPost.setIsPersonal(postReq.getIsPersonal());
+                updatedPost.setIsProduct(postReq.getIsProduct());
                 return updatedPost;
             }
         }catch(PostException e){

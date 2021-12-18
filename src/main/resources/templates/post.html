@@ -9,11 +9,50 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/chatter.css">
     <link rel="stylesheet" href="/post.css">
     <title>Chatter | Start Conversation</title>
 </head>
-<body>
+<body class="mt-10">
 <div class="container">
+    <nav class="navbar fixed-top navbar-dark bg-dark navbar-icon-top navbar-expand-md">
+        <a class="navbar-brand" th:href="@{feed}">Chatter</a>
+        <button class="navbar-toggler block cta" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon toggle-btn type14"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{start-conversation}">
+                        <i class="fa fa-pencil"></i>
+                        New Post
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">
+                        <i class="fa fa-shopping-cart">
+                            <span class="badge badge-danger">11</span>
+                        </i>
+                        Cart
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user"></i>
+                        <span th:text="${user.getFirstName()}"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" th:href="@{profile}">Profile</a>
+                        <a class="dropdown-item" th:href="@{privates}">Private Posts</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="stepwizard">
         <div class="stepwizard-row setup-panel">
             <div class="stepwizard-step col-xs-3">
@@ -43,24 +82,28 @@
         </div>
     </div>
 
-    <form role="form" method="post" th:action="@{/new-post}" th:object="${createPost}">
+    <form role="form" method="post" th:action="@{/new-post}" th:object="${createPost}" enctype="multipart/form-data">
         <div class="panel panel-primary setup-content" id="step-1">
             <div class="panel-heading">
                 <h3 class="panel-title">Step I</h3>
             </div>
             <div class="panel-body">
                 <p>Upload that gossip worthy photo</p>
-                <input th:field="*{img}" type="file" accept=".png, .jpg, .jpeg">
+<!--                <input th:field="*{img}" type="file" accept=".png, .jpg, .jpeg" required>-->
+
+                <label class="form-label" for="customFile">Photo</label>
+                <input type="file" name="file" class="form-control" id="customFile"/>
+
                 <div>
                     <input  name="*{id}" value="${postId}" type="hidden" />
-<!--                    <input th:field="*{id}" th:value="${editPost?.getId()}" type="hidden"/>-->
+<!--    <input th:field="*{id}" th:value="${editPost?.getId()}" type="hidden"/>-->
                     <input th:field="*{isPersonal}" type="radio" id="privatePost" name="contact" value=true>
                     <label for="privatePost">Private</label>
 
                     <input th:field="*{isPersonal}" type="radio" id="publicPost" name="contact" value=false checked>
                     <label for="publicPost">Public</label>
                 </div>
-                <button class="btn btn-primary nextBtn pull-right" type="button">Next</button>
+                <button class="btn btn-primary nextBtn pull-right" type="button">Let's Go</button>
             </div>
         </div>
 
@@ -69,15 +112,23 @@
                 <h3 class="panel-title">Step II</h3>
             </div>
             <div class="panel-body">
-                <p>Spice it up with pepper them caption</p>
+                <div>
+                    <div>
+                        <input th:field="*{isProduct}" id="upldProduct" onclick="showProductDiv()" type="radio" value=true>
+                        <label for="upldProduct">I am uploading a product</label>
+                    </div>
+                    <div>
+                        <input th:field="*{isProduct}" id="upldPost" onclick="hideProductDiv()" type="radio" value=false checked>
+                        <label for="upldPost">I am uploading a post</label>
+                    </div>
+                    <p>Spice it up with a "pepper them" caption</p>
+                    <textarea th:field="*{body}" type="text"></textarea>
+                </div>
                 <input name="postId" th:value="${ePostId}" type="hidden"/>
-                <textarea th:field="*{body}" th:text="${editPost.getBody()}" type="text"></textarea>
                 <ul class="list-inline pull-right">
-                    <li><button class="btn btn-primary nextBtn pull-right" type="button">Save and continue</button></li>
+                    <li><button class="btn btn-primary nextBtn pull-right" type="button">Almost There!!</button></li>
 <!--                    <li><button type="button" class="btn btn-default prev-step">Previous</button></li>-->
-<!--                    <li><button type="button" class="btn btn-primary next-step">Save and continue</button></li>-->
                 </ul>
-
             </div>
         </div>
 
@@ -86,8 +137,17 @@
                 <h3 class="panel-title">Step III</h3>
             </div>
             <div class="panel-body">
-                <p>Add more details about your product</p>
-                <button class="btn btn-primary nextBtn pull-right" type="button">Next</button>
+                <div id="productDiv" style="display:none">
+                    <p>Add more details about your product</p><hr>
+                    <div>
+                        <input th:field="*{price}" type="number" id="priceField">
+                        <label id="price" for="priceField">Price</label>
+
+                        <textarea th:field="*{description}" type="text" id="descField"></textarea>
+                        <label id="desc" for="descField">Describe what makes your product amazing</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary nextBtn pull-right" type="button">One More</button>
             </div>
         </div>
 
@@ -97,11 +157,16 @@
             </div>
             <div class="panel-body">
                 <p>You have successfully completed all steps.</p>
-                <button class="btn btn-success pull-right" type="submit">Post!</button>
+                <button class="btn btn-success pull-right" type="submit">Post!!!</button>
             </div>
         </div>
     </form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 <script>
     $(document).ready(function () {
         var navListItems = $('div.setup-panel div a'),
@@ -144,6 +209,18 @@
 
         $('div.setup-panel div a.btn-success').trigger('click');
     });
+</script>
+<script>
+    const PRODUCTDIV = document.querySelector("#productDiv");
+
+    function showProductDiv() {
+        if(PRODUCTDIV.style.display = "none"){
+            PRODUCTDIV.style.display = "block";
+        }
+    }
+    function hideProductDiv() {
+        PRODUCTDIV.style.display = "block";
+    }
 </script>
 </body>
 </html>

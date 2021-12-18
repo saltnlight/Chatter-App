@@ -2,6 +2,7 @@ package com.flora.chatter.Controller;
 
 import com.flora.chatter.Exception.UserException;
 import com.flora.chatter.Model.AppUser;
+import com.flora.chatter.Model.Post;
 import com.flora.chatter.Payload.Request.*;
 import com.flora.chatter.Service.AppUserService;
 import com.flora.chatter.Service.PostService;
@@ -41,6 +42,18 @@ public class AppUserController {
         return modelAndView;
     }
 
+    @GetMapping("/profile")
+    public ModelAndView profilePage(HttpServletRequest request){
+        ModelAndView modelAndView = new ModelAndView("profile");
+        HttpSession session = request.getSession();
+        AppUser user = (AppUser) session.getAttribute("user");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("updateUser", new UpdateProfileReq());
+        modelAndView.addObject("userPosts", postService.fetchAllUserPost(user.getId()));
+        modelAndView.addObject("commentReq", new CommentReq());
+        return modelAndView;
+    }
+
     @GetMapping("/feed")
     public ModelAndView feedPage(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -51,6 +64,7 @@ public class AppUserController {
         modelAndView.addObject("commentReq", new CommentReq());
         modelAndView.addObject("PLReq", new PostLikeReq());
         modelAndView.addObject("CLReq", new CommentLikeReq());
+        modelAndView.addObject("OrderReq", new OrderReq());
         return modelAndView;
     }
 

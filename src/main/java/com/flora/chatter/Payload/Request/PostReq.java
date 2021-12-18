@@ -18,4 +18,11 @@ public class PostReq {
 
     @NotBlank
     private Boolean isPersonal=false;
+
+    private Double price;
+
+    private String description;
+
+    @NotBlank
+    private Boolean isProduct=false;
 }

@@ -6,7 +6,7 @@ import com.flora.chatter.Payload.Request.LoginReq;
 import com.flora.chatter.Payload.Request.RegisterReq;
 
 public interface AppUserService{
-    public AppUser createUser(RegisterReq registerUserReq);
+    AppUser createUser(RegisterReq registerUserReq);
 
-    public AppUser loginUser(LoginReq loginUserReq);
+    AppUser loginUser(LoginReq loginUserReq);
 }

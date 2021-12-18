@@ -2,6 +2,8 @@ package com.flora.chatter.Repository;
 
 import com.flora.chatter.Model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,11 +13,8 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByIsPersonalFalseOrderByCreatedAtDesc();
 
-    List<Post> findAllByIdAndIsPersonalTrueOrderByCreatedAtDesc(Long id);
+    @Query("SELECT post FROM Post as post WHERE post.user.id = :userID AND post.isPersonal = true")
+    List<Post> findPrivateByUserId(@Param("userID") Long userID);
 
-    //    @Query("SELECT pl FROM Post_Likes as pl WHERE pl.post.id = :postID AND pl.user.id = :userID")
-//    Optional<Post_Likes> findByPostIdAndUserId(@Param("postID") Long postID, @Param("userID") Long userID);
-
-//    Optional<Post_Likes> findByPostIdAndUserId(Long postID, Long userID);
-
+    List<Post> findAllByUserIdOrderByCreatedAtDesc(Long id);
 }

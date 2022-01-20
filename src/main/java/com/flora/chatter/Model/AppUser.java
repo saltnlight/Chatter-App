@@ -16,6 +16,10 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+//    @UniqueConstraint(name = username)
+    private String username;
+
     @NotBlank(message = "This field id required")
     private String firstName;
 
@@ -29,6 +33,8 @@ public class AppUser {
     private String gender;
 
     private String profileImage;
+
+    private Role role = Role.USER;
 
     @NotBlank(message = "This field is required")
     @Size(min = 10, max = 15)

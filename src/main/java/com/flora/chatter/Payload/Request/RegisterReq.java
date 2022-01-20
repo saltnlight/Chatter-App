@@ -13,6 +13,8 @@ public class RegisterReq {
     @NotEmpty
     private String firstName;
 
+    private String username = "user";
+
     @NotEmpty
     private String lastName;
 

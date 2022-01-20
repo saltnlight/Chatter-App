@@ -24,6 +24,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Transactional
     public AppUser createUser(RegisterReq registerUserReq) {
         if(appUserRepository.existsAppUserByEmail(registerUserReq.getEmail())){
+            System.out.println("Already Exists");
             throw new UserException("Already Exists");
         }
         AppUser user = new AppUser();
@@ -33,7 +34,7 @@ public class AppUserServiceImpl implements AppUserService {
         user.setGender(registerUserReq.getGender());
         user.setMobile(registerUserReq.getMobile());
         user.setPassword(registerUserReq.getPassword());
-
+        user.setUsername(registerUserReq.getUsername());
         return appUserRepository.save(user);
     }
 
